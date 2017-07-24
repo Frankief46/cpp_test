@@ -1,0 +1,48 @@
+################################################
+#
+# Please add comments when you modify this file 
+#
+################################################
+
+autom4te.cache
+build
+aclocal.m4
+configure
+Makefile.in
+ar-lib
+compile
+config.guess
+config.h.in
+config.sub
+depcomp
+install-sh
+ltmain.sh
+missing
+.deps
+.vagrant
+.DS_Store
+*.pyc
+toolchain
+cscope.out
+test_output
+tags
+ubuntu-xenial-16.04-cloudimg-console.log
+
+
+# intermediate files from docker.mk
+.copy_priv_key
+.native_*
+.bbb_*
+.pc20_*
+deploy_id_rsa
+deploy_id_rsa.pub
+intermediate
+
+# test result directory
+test_output
+
+# intermediate files from autoreconf
+libs/test-driver
+
+#cloud9 meta data
+.c9
