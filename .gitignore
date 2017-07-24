@@ -46,3 +46,9 @@ libs/test-driver
 
 #cloud9 meta data
 .c9
+
+Makefile
+config.h
+config.log
+config.status
+stamp-h1
