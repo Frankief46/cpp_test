@@ -44,7 +44,7 @@ AM_CONDITIONAL(LINUX_NATIVE64, test x"$HOST" = x"x86_64-linux")
 AM_CONDITIONAL(LINUX_ARM, test x"$HOST" = x"arm-linux")
 AM_CONDITIONAL(LINUX_X86, test x"$HOST" = x"i586-linux")
 
-AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([Makefile cereal_app/Makefile])
 AC_CONFIG_SUBDIRS([deps])
 
 AC_OUTPUT

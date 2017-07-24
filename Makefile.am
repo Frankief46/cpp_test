@@ -1,1 +1,1 @@
-SUBDIRS = deps
+SUBDIRS = deps cereal_app
