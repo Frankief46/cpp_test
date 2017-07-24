@@ -62,7 +62,7 @@ CMAKE_VERSION_MAJOR=`echo $CMAKE_VER_2 | cut -d. -f1`
 
 AC_MSG_RESULT([ok])
 
-AC_CONFIG_FILES([Makefile cereal/Makefile])
+AC_CONFIG_FILES([Makefile cereal/Makefile catch/Makefile])
 
 AC_OUTPUT
 

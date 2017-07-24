@@ -1,3 +1,3 @@
 
 
-SUBDIRS = cereal
+SUBDIRS = cereal catch
