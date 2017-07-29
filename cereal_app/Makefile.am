@@ -1,4 +1,4 @@
-AM_CXXFLAGS = -I${srcdir}/include -I$(top_srcdir)/include -I../deps/include
+AM_CXXFLAGS = -I${srcdir}/include -I$(top_srcdir)/include -I../deps/include -I.
 AM_LDFLAGS = -L. -L../deps/lib
 
 #noinst_LIBRARIES = libapp_main.a

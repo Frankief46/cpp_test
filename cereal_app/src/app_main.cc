@@ -5,16 +5,32 @@
 #include "catch.hpp"
 
 #include <cereal/cereal.hpp>
-#include <cereal/archives/json.hpp>
+#include "json_ext.hpp"
+#include <cereal/archives/binary.hpp>
 
 using namespace std;
+
+struct PayLoad1 {
+    string x = "xDefault";
+    string y = "yDefault";
+    string z = "zDefault";
+    
+    template<class Archive> 
+    void serialize(Archive &archive) const{
+         archive(
+            ::cereal::make_nvp("x", x),
+            ::cereal::make_nvp("y", y),
+            ::cereal::make_nvp("z", z)
+        );
+    }
+};
 
 struct PayLoad {
     string x = "xDefault";
     string y = "yDefault";
     string z = "zDefault";
     
-    void save(cereal::JSONOutputArchive &archive) const{
+    void save(cereal_ext::JSONOutputArchive &archive) const{
          archive(
             ::cereal::make_nvp("x", x),
             ::cereal::make_nvp("y", y),
@@ -22,7 +38,7 @@ struct PayLoad {
         );
     }
     
-    void load(cereal::JSONInputArchive &archive) {
+    void load(cereal_ext::JSONInputArchive &archive) {
         //x is required
         bool isXLoaded = false;
         while (true)
@@ -40,7 +56,8 @@ struct PayLoad {
             }else if(name == "z"){
                 archive(this->z);
             }else{
-                throw cereal::Exception("undefined field " + name);
+                std::cout << "undefined field " << name << std::endl;
+                archive.advanceNode();
             }
         }
         
@@ -55,14 +72,14 @@ struct Wrapper{
     int a = 123;
     PayLoad p;
     
-    void save(cereal::JSONOutputArchive &archive) const{
+    void save(cereal_ext::JSONOutputArchive &archive) const{
          archive(
             ::cereal::make_nvp("a", a),
             ::cereal::make_nvp("p", p)
         );
     }
 
-    void load(cereal::JSONInputArchive &archive) {
+    void load(cereal_ext::JSONInputArchive &archive) {
         while (true)
         {
             const auto namePtr = archive.getNodeName();
@@ -75,23 +92,28 @@ struct Wrapper{
             }else if(name == "p"){
                 archive(this->p);
             }else{
-                throw cereal::Exception("undefined field " + name);
+                std::cout << "undefined field " << name << std::endl;
+                archive.advanceNode();
             }
         }
     }
 };
+
+TEST_CASE("Handle binary", "[json][binary]"){
+    
+}
 
 TEST_CASE("Handle optional fields", "[json][optional]"){
     
     // Wrapper e;
     // ostringstream ostream;
     // {
-    //     cereal::JSONOutputArchive archive(ostream);
+    //     cereal_ext::JSONOutputArchive archive(ostream);
     //     e.save(archive);
     // }
     // cout << ostream.str() << endl;
     
-    string wapper_json_no_missing = "{\"a\": 345,\"p\": {\"x\": \"xfull\",\"y\": \"yfull\",\"z\": \"zfull\"}}";
+    string wapper_json_no_missing = "{\"gg\": 345,\"a\": 345,\"p\": {\"x\": \"xfull\",\"y\": \"yfull\",\"z\": \"zfull\"}}";
     string wapper_json_missing_z_unorder = "{\"p\": {\"y\": \"y_missing_z\",\"x\": \"x_missing_z\"},\"a\": 345}";
     
     std::string fullJson = "{\n    \"x\": \"xfull\",\n    \"y\": \"yfull\",\n    \"z\": \"zfull\"\n}";
@@ -103,7 +125,7 @@ TEST_CASE("Handle optional fields", "[json][optional]"){
     
     SECTION("no missing fields wrapper"){
         istringstream istream(wapper_json_no_missing);
-        cereal::JSONInputArchive archive(istream);
+        cereal_ext::JSONInputArchive archive(istream);
         wresult.load(archive);
         
         CHECK(wresult.a == 345);
@@ -114,7 +136,7 @@ TEST_CASE("Handle optional fields", "[json][optional]"){
     
     SECTION("wrapper missing z field in payload, random order"){
         istringstream istream(wapper_json_missing_z_unorder);
-        cereal::JSONInputArchive archive(istream);
+        cereal_ext::JSONInputArchive archive(istream);
         wresult.load(archive);
         
         CHECK(wresult.a == 345);
@@ -125,7 +147,7 @@ TEST_CASE("Handle optional fields", "[json][optional]"){
     
     SECTION("no missing fields"){
         istringstream istream(fullJson);
-        cereal::JSONInputArchive archive(istream);
+        cereal_ext::JSONInputArchive archive(istream);
         presult.load(archive);
         
         CHECK(presult.x == "xfull");
@@ -135,7 +157,7 @@ TEST_CASE("Handle optional fields", "[json][optional]"){
     
     SECTION("missing y field && out of order"){
         istringstream istream(missing_y_out_of_order_json);
-        cereal::JSONInputArchive archive(istream);
+        cereal_ext::JSONInputArchive archive(istream);
         presult.load(archive);
         
         CHECK(presult.x == "x_missing_y");
@@ -146,7 +168,7 @@ TEST_CASE("Handle optional fields", "[json][optional]"){
     
     SECTION("missing required field x, should throw exception"){
         istringstream istream(missing_x_json);
-        cereal::JSONInputArchive archive(istream);
+        cereal_ext::JSONInputArchive archive(istream);
         
         INFO("A cereal exception should throw");
         CHECK_THROWS_AS(presult.load(archive), cereal::Exception);
