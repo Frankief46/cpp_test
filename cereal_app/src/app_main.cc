@@ -113,10 +113,10 @@ TEST_CASE("Handle optional fields", "[json][optional]"){
     // }
     // cout << ostream.str() << endl;
     
-    string wapper_json_no_missing = "{\"gg\": 345,\"a\": 345,\"p\": {\"x\": \"xfull\",\"y\": \"yfull\",\"z\": \"zfull\"}}";
+    string wapper_json_no_missing = "{\"extra_filed\": 345,\"a\": 345,\"p\": {\"x\": \"xfull\",\"y\": \"yfull\",\"z\": \"zfull\"}}";
     string wapper_json_missing_z_unorder = "{\"p\": {\"y\": \"y_missing_z\",\"x\": \"x_missing_z\"},\"a\": 345}";
     
-    std::string fullJson = "{\n    \"x\": \"xfull\",\n    \"y\": \"yfull\",\n    \"z\": \"zfull\"\n}";
+    std::string fullJson = "{\n    \"x\": \"xfull\",\n    \"extra\": \"extra\",\n \"y\": \"yfull\",\n    \"z\": \"zfull\"\n}";
     std::string missing_y_out_of_order_json = "{\"z\": \"z_missing_y\",\"x\":\"x_missing_y\"\n}";
     std::string missing_x_json = "{\"y\": \"yfull\",\n    \"z\": \"zfull\"\n}";
     
